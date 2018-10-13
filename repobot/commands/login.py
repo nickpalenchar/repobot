@@ -4,6 +4,8 @@
 from .base import Base
 
 import keyring
+import requests
+from requests.auth import HTTPBasicAuth
 import sys
 import re
 
@@ -23,6 +25,7 @@ class Login(Base):
             if re.match('ye?s?', confirm, flags=2) is None:
                 sys.exit(0)
             #@TODO: do a keyring test
-
+        
+        res = requests.ge
         keyring.set_password('repobot', 'auth', token)
         print('Successfully authenticated')        
