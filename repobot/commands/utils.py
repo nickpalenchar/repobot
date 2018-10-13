@@ -1,10 +1,11 @@
 # repobot/commands/utils.py
 '''utility functions and wrappers'''
 
+import sys
 from functools import wraps
-import requests
 from requests.auth import HTTPBasicAuth
 import keyring
+import requests
 
 class GitHubAuthenticationError(Exception):
     pass
@@ -18,16 +19,16 @@ def set_token(func):
         username = keyring.get_password('repobot', 'username')
         password = keyring.get_password('repobot', 'password')
 
-        #r = requests.get('https://api.github.com/user', auth='')
         if password is None:
-            return CredentialsNotFound('Set credentials first with `repobot login`')
+            print('Set credentials first with `repobot login`')
+            sys.exit(0)
 
-        res = func(*args, basicauth=requests.auth.HTTPBasicAuth(username, password), **kwargs)
+        r = requests.get('https://api.github.com/user', auth=HTTPBasicAuth(username, password))
+        if r.status_code == 401:
+            print('Invalid Auth credentials. Please log in again')
+            sys.exit(0)
         
-        print('YO')
-        if res.status_code == 401:
-            print('error AUTH')
-            return GitHubAuthenticationError(
-                'Unauthorized. Use `repobot` login to update credentials')
+        func(*args, basicauth=HTTPBasicAuth(username, password), **kwargs)
+        
         
     return wrapper
