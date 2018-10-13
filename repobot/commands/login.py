@@ -8,24 +8,24 @@ import requests
 from requests.auth import HTTPBasicAuth
 import sys
 import re
+import getpass
 
 class Login(Base):
     '''login class'''
 
     def run(self):
-        token = self.options['<token>'] 
         
-        if token is None:
-            token = input("Provide a personal access token:\n> ")
+        username = input('Github username: ')
+        password = getpass.getpass(stream=None)
 
-        if keyring.get_password('repobot', 'auth') is not None:
-            # @TODO get the -f flag
-            print('Auth token already exists! (*****%s)' % keyring.get_password('repobot', 'auth')[-6:])
-            confirm = input('Replace ******%s with new key? [y/N] ' % token[-6:])
-            if re.match('ye?s?', confirm, flags=2) is None:
-                sys.exit(0)
-            #@TODO: do a keyring test
+        print('pass', password)
         
-        res = requests.ge
-        keyring.set_password('repobot', 'auth', token)
+#        res = requests.get('https://api.github.com/user', auth=HTTPBasicAuth(username, password))
+
+        if res.status_code != 200:
+            print('Invalid login request.')
+            return sys.exit(1)
+        
+        keyring.set_password('repobot', 'username', username)
+        keyring.set_password('repobot', 'password', password)
         print('Successfully authenticated')        

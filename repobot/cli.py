@@ -2,7 +2,7 @@
 repobot
 
 Usage:
-    rbot login [<token>] [-f]
+    rbot login
     rbot add [<repo_name>]
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
