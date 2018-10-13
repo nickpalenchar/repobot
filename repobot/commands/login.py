@@ -19,7 +19,7 @@ class Login(Base):
         if keyring.get_password('repobot', 'auth') is not None:
             # @TODO get the -f flag
             print('Auth token already exists! (*****%s)' % keyring.get_password('repobot', 'auth')[-6:])
-            confirm = input('Replace ******%s with new key? [y/N]')
+            confirm = input('Replace ******%s with new key? [y/N] ' % token[-6:])
             if re.match('ye?s?', confirm, flags=2) is None:
                 sys.exit(0)
             #@TODO: do a keyring test
