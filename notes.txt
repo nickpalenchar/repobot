@@ -1,1 +1,5 @@
-https://stormpath.com/blog/building-simple-cli-interfaces-in-pythonu (building off this)
+https://stormpath.com/blog/building-simple-cli-interfaces-in-python (building off this)
+
+USEFUL COMMANDS
+
+/ python setup.py test # run tests

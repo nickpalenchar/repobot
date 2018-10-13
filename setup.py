@@ -7,7 +7,7 @@ from subprocess import call
 
 from setuptools import Command, find_packages, setup
 
-from octobot import __version__
+from repobot import __version__
 
 
 this_dir = abspath(dirname(__file__))
@@ -32,26 +32,26 @@ class RunTests(Command):
         raise SystemExit(errno)
 
 setup(
-    name = 'octobot',
+    name = 'repobot',
     version = __version__,
     description = 'Programatic github automation',
     long_description = long_description,
-    url = 'https://github.com/nickpalenchar/octobot',
+    url = 'https://github.com/nickpalenchar/repobot',
     author = 'Nick Palenchar',
     author_email = '',
     license = 'MIT',
     classifiers = [ 'github'
     ],
     keywords = 'cli',
-    packages = find_packages(exclude=['docs', 'tests*']),
+    packages = find_packages(exclude=['docs', 'tests*']), # prevents irrelevent files from being added to package
     install_requires = ['docopt'],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },
     entry_points = {
         'console_scripts': [
-            'octobot=octobot.cli:main',
-            'oct=octobot.cli:main'
+            'rbot=repobot.cli:main',
+            'repobot=repobot.cli:main'
         ],
     },
     cmdclass = {'test': RunTests},
