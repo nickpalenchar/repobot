@@ -2,10 +2,11 @@
 repobot
 
 Usage:
+    rbot login
     rbot add [<repo_name>]
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
-    rbot hello
+    rbot hello [<world>] [--name=<yours>]
 """
 
 from inspect import getmembers, isclass
@@ -22,17 +23,11 @@ def main():
     # Here we'll try to dynamically match the command the user is trying to run
     # with a pre-defined command class we've already created.
     for (k, v) in options.items():
-        print('try ', k)
-        print(hasattr(repobot.commands, k))
         if hasattr(repobot.commands, k) and v:
-            print('GOT ONE')
             module = getattr(repobot.commands, k)
             repobot.commands = getmembers(module, isclass)
             command = [command[1] for command in repobot.commands if command[0] != 'Base'][0]
-            
             command = command(options)
-            print('the command', command)
-            print('the func,', command.run)
             command.run()
 
 if __name__ == '__main__':
