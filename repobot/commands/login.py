@@ -18,8 +18,6 @@ class Login(Base):
         username = input('Github username: ')
         password = getpass.getpass()
 
-        print('pass', password)
-        
         res = requests.get('https://api.github.com/user', auth=requests.auth.HTTPBasicAuth(username, password))
 
         if res.status_code != 200:
