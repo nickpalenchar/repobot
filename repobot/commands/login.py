@@ -5,7 +5,7 @@ from .base import Base
 
 import keyring
 import requests
-from requests.auth import HTTPBasicAuth
+#from requests.auth import HTTPBasicAuth
 import sys
 import re
 import getpass
@@ -16,11 +16,11 @@ class Login(Base):
     def run(self):
         
         username = input('Github username: ')
-        password = getpass.getpass(stream=None)
+        password = getpass.getpass()
 
         print('pass', password)
         
-#        res = requests.get('https://api.github.com/user', auth=HTTPBasicAuth(username, password))
+        res = requests.get('https://api.github.com/user', auth=requests.auth.HTTPBasicAuth(username, password))
 
         if res.status_code != 200:
             print('Invalid login request.')

@@ -1,2 +1,2 @@
 from .hello import *
-from .login import *
+from .login import Login
