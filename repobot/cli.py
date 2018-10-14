@@ -3,7 +3,7 @@ repobot
 
 Usage:
     rbot login
-    rbot add [<repo_name>]
+    rbot new [<repo_name>] [-DC] [--private]
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
     rbot hello [<world>] [--name=<yours>]
