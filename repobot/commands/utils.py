@@ -38,3 +38,17 @@ def cinput(*args, expression='', error_message='Invalid'):
             return i
         else:
             print(error_message)
+
+def yn_input(prompt='', default=None):
+    '''wraps input command to get a yes or no response'''
+    while True:
+        if default is True:
+            res = input(prompt + '[Y/n] : ')
+            if re.search('no?', res, flags=2):
+                return False
+            return True
+        else:
+            res = input(prompt + '[y/N] : ')
+            if re.search('ye?s?', res, flags=2):
+                return True
+            return False
