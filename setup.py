@@ -34,7 +34,7 @@ class RunTests(Command):
 setup(
     name = 'repobot',
     version = __version__,
-    description = 'Programatic github automation',
+    description = 'Programatic github repo automation',
     long_description = long_description,
     url = 'https://github.com/nickpalenchar/repobot',
     author = 'Nick Palenchar',
