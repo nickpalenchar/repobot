@@ -7,11 +7,6 @@ from requests.auth import HTTPBasicAuth
 import keyring
 import requests
 
-class GitHubAuthenticationError(Exception):
-    pass
-
-class CredentialsNotFound(Exception):
-    pass
 
 def set_token(func):
     @wraps(func)
@@ -32,3 +27,14 @@ def set_token(func):
         
         
     return wrapper
+
+
+import re
+
+def cinput(*args, expression='', error_message='Invalid'):
+    while True:        
+        i = input(*args)
+        if re.search(expression, i):
+            return i
+        else:
+            print(error_message)

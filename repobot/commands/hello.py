@@ -17,4 +17,3 @@ class Hello(Base):
         print('the re was', r)
         print('Hello, world!')
         print('You suplied the following optons:', dumps(self.options, indent=2, sort_keys=True))
-        return r
