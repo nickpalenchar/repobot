@@ -5,7 +5,6 @@ from .base import Base
 
 import keyring
 import requests
-#from requests.auth import HTTPBasicAuth
 import sys
 import re
 import getpass
@@ -29,6 +28,10 @@ class Login(Base):
 
     def getLoginDetails(self) -> tuple:
         """Prompts the user for a github login, terminates on KeyboardInterrupt"""
-        username = input('Guthub username: ')
-        password = getpass.getpass()
+        try:
+            username = input('Guthub username: ')
+            password = getpass.getpass()
+        except KeyboardInterrupt:
+            print('\nok then -_-')
+            sys.exit()
         return (username, password)
