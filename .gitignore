@@ -1,4 +1,6 @@
 __pycache__
+bin
 dist
+lib
 repobot.egg-info
 *.swp
