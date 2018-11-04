@@ -22,17 +22,17 @@ def set_token(func):
         if r.status_code == 401:
             print('Invalid Auth credentials. Please log in again')
             sys.exit(0)
-        
+
         func(*args, basicauth=HTTPBasicAuth(username, password), **kwargs)
-        
-        
+
+
     return wrapper
 
 
 import re
 
 def cinput(*args, expression='', error_message='Invalid'):
-    while True:        
+    while True:
         i = input(*args)
         if re.search(expression, i):
             return i
@@ -52,3 +52,13 @@ def yn_input(prompt='', default=None):
             if re.search('ye?s?', res, flags=2):
                 return True
             return False
+
+def allowescape(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyboardInterrupt:
+            print('\nBye')
+            sys.exit()
+    return wrapper
