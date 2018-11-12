@@ -21,9 +21,6 @@ class New(Base):
                 'private': isprivate,
                 'auto_init': hasreadme,}
         res = requests.post('https://api.github.com/user/repos', auth=basicauth, json=data)
-        print('maybe it worked')
-        print(json.dumps(res.json(), indent=2))
-        print(self.options)
         if res.status_code == 201:
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])
