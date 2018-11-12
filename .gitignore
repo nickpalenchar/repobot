@@ -1,6 +1,9 @@
 __pycache__
+.Python
 bin
 dist
 lib
 repobot.egg-info
 *.swp
+.DS_Store
+build
