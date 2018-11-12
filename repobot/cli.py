@@ -7,6 +7,11 @@ Usage:
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
     rbot hello [<world>] [--name=<yours>]
+
+Options
+    -D     Use all defaluts.
+    -C     
+
 """
 
 from inspect import getmembers, isclass

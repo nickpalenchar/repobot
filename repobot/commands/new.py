@@ -20,7 +20,6 @@ class New(Base):
                 'description': description,
                 'private': isprivate,
                 'auto_init': hasreadme,}
-        print('body to send\n', data)
         res = requests.post('https://api.github.com/user/repos', auth=basicauth, json=data)
         print('maybe it worked')
         print(json.dumps(res.json(), indent=2))
