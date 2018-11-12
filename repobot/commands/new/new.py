@@ -3,9 +3,11 @@
 import json
 import sys
 import requests
+import os
+from os import path
 
-from .base import Base
-from .utils import set_token, cinput, yn_input, allowescape
+from ..base import Base
+from ..utils import set_token, cinput, yn_input, allowescape
 
 class New(Base):
 
@@ -25,6 +27,10 @@ class New(Base):
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])
             #@TODO: Finish self.cloneprompt for git cloning automatically
+            if self.options['--clone']:
+                os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + resdata['clone_url'])
+
+
         else:
             print('Couldn\'t create repo')
             print(json.dumps(res.json(), indent=2))

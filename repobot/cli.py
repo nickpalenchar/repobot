@@ -3,14 +3,14 @@ repobot
 
 Usage:
     rbot login
-    rbot new [<repo_name>] [-DC] [--private]
+    rbot new [<repo_name>] [-DC] [--private --clone]
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
     rbot hello [<world>] [--name=<yours>]
 
 Options
-    -D     Use all defaluts.
-    -C     
+    -D       Use all defaluts.
+    --clone  Automatically clone the created repo.
 
 """
 
