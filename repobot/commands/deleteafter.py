@@ -1,10 +1,10 @@
-import .utils
+import utils
 
-@checkshellcommand('git')
+@utils.checkshellcommand('git')
 def hello():
     print('this sohuld work')
 
-@checkshellcommand('helloooaa')
+@utils.checkshellcommand('helloooaa')
 def nope():
     print('this sohuld not')
 

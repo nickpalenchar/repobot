@@ -7,7 +7,7 @@ import os
 from os import path
 
 from ..base import Base
-from ..utils import set_token, cinput, yn_input, allowescape
+from ..utils import set_token, cinput, yn_input, allowescape, checkshellcommand
 
 class New(Base):
 
@@ -60,6 +60,7 @@ class New(Base):
         return yn_input('Initialize with a README? ', default=False)
 
     @allowescape
+    @checkshellcommand('git')
     def cloneprompt(self, cloneurl):
         if self.options['-C'] or yn_input('Clone into current working directory now? [y/N] ', default=False):
             return os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + cloneurl)

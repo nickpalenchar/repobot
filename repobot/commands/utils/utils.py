@@ -6,7 +6,7 @@ from functools import wraps
 from requests.auth import HTTPBasicAuth
 import keyring
 import requests
-
+import os
 
 def set_token(func):
     @wraps(func)
@@ -75,4 +75,5 @@ def checkshellcommand(command, quiet=True):
                 return func(*args, **kwargs)            
             if not quiet:
                 print('WARN: Shell command %s was needed but not found. Some things may not work' %s)
+        return wrapper
     return decorator
