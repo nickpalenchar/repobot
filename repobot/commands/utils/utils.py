@@ -6,7 +6,7 @@ from functools import wraps
 from requests.auth import HTTPBasicAuth
 import keyring
 import requests
-
+import os
 
 def set_token(func):
     @wraps(func)
@@ -62,3 +62,18 @@ def allowescape(func):
             print('\nBye')
             sys.exit()
     return wrapper
+
+def checkshellcommand(command, quiet=True):
+    """
+    Only runs the decorated function if the given shell commands is installed
+    quiet - Silently omits running the command if true, otherwise informs user to install the required command
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if os.popen('which %s' % command).read():
+                return func(*args, **kwargs)            
+            if not quiet:
+                print('WARN: Shell command %s was needed but not found. Some things may not work' %s)
+        return wrapper
+    return decorator

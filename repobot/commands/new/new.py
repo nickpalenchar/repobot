@@ -3,9 +3,11 @@
 import json
 import sys
 import requests
+import os
+from os import path
 
-from .base import Base
-from .utils import set_token, cinput, yn_input, allowescape
+from ..base import Base
+from ..utils import set_token, cinput, yn_input, allowescape, checkshellcommand
 
 class New(Base):
 
@@ -21,13 +23,10 @@ class New(Base):
                 'private': isprivate,
                 'auto_init': hasreadme,}
         res = requests.post('https://api.github.com/user/repos', auth=basicauth, json=data)
-        print('maybe it worked')
-        print(json.dumps(res.json(), indent=2))
-        print(self.options)
         if res.status_code == 201:
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])
-            #@TODO: Finish self.cloneprompt for git cloning automatically
+            self.cloneprompt(resdata['clone_url'])
         else:
             print('Couldn\'t create repo')
             print(json.dumps(res.json(), indent=2))
@@ -61,7 +60,7 @@ class New(Base):
         return yn_input('Initialize with a README? ', default=False)
 
     @allowescape
+    @checkshellcommand('git')
     def cloneprompt(self, cloneurl):
-        if self.options['-C'] or yn_input('Clone into current working directory now? ', default=False):
-            args = ['git', 'clone', cloneurl]
-            return subprocess.run(args, shell=True, check=True)
+        if self.options['-C'] or yn_input('Clone into current working directory now? [y/N] ', default=False):
+            return os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + cloneurl)

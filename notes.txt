@@ -1,3 +1,9 @@
+RUNNING
+locally, can run `python repobot/cli.py <commands...>`
+
+
+
+
 https://stormpath.com/blog/building-simple-cli-interfaces-in-python (building off this)
 
 USEFUL COMMANDS
