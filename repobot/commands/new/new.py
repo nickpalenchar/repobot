@@ -26,11 +26,7 @@ class New(Base):
         if res.status_code == 201:
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])
-            #@TODO: Finish self.cloneprompt for git cloning automatically
-            if self.options['--clone']:
-                os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + resdata['clone_url'])
-
-
+            self.cloneprompt(resdata['clone_url'])
         else:
             print('Couldn\'t create repo')
             print(json.dumps(res.json(), indent=2))
@@ -65,6 +61,5 @@ class New(Base):
 
     @allowescape
     def cloneprompt(self, cloneurl):
-        if self.options['-C'] or yn_input('Clone into current working directory now? ', default=False):
-            args = ['git', 'clone', cloneurl]
-            return subprocess.run(args, shell=True, check=True)
+        if self.options['-C'] or yn_input('Clone into current working directory now? [y/N] ', default=False):
+            return os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + cloneurl)
