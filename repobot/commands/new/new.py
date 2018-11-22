@@ -22,7 +22,12 @@ class New(Base):
                 'description': description,
                 'private': isprivate,
                 'auto_init': hasreadme,}
-        res = requests.post('https://api.github.com/user/repos', auth=basicauth, json=data)
+        POST_URL = 'https://api.github.com/orgs/%s/repos' % (self.options['--org']) \
+                    if self.options['--org'] \
+                    else 'https://api.github.com/user/repos'
+        
+        res = requests.post(POST_URL, auth=basicauth, json=data)
+        
         if res.status_code == 201:
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])

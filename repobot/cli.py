@@ -3,15 +3,25 @@ repobot
 
 Usage:
     rbot login
-    rbot new [<repo_name>] [-DC] [--private --clone]
+    rbot new [<repo_name>] [-DC] [--private --clone --org=<org_name>]
     rbot info <repo_name>
     rbot pr [<repo_name] [<branch]
     rbot hello [<world>] [--name=<yours>]
 
 Options
-    -D       Use all defaluts.
-    --clone  Automatically clone the created repo.
+    -D                Use all defaluts.
+    --clone           Automatically clone the created repo.
+    --org=<org_name>  Create in the <org_name> that you're a member of.  
 
+Examples
+    Create a new repository named foo
+        rbot new foo
+
+    Create a new private repository named foo and automatically clone it
+        rbot new --private -C foo
+
+    Create a new repository named foo in orgization xyzorg, using system defaults
+        rbot new --org=xyzorg -D foo
 """
 
 from inspect import getmembers, isclass
