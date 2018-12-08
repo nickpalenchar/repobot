@@ -4,14 +4,17 @@ repobot
 Usage:
     rbot login
     rbot new [<repo_name>] [-DC] [--private --clone --org=<org_name>]
-    rbot info <repo_name>
-    rbot pr [<repo_name] [<branch]
+    rbot ls [--params=<param_str>] [--limit <number>|--all]
+    rbot pr [<repo_name>] [<branch]
     rbot hello [<world>] [--name=<yours>]
-
-Options
+    
+Options:
     -D                Use all defaluts.
     --clone           Automatically clone the created repo.
     --org=<org_name>  Create in the <org_name> that you're a member of.  
+    --limit <number>  For getting lists, shows only the number of entries specified. Overrules --all
+    --all             For getting lists, inclued all entries. Is ignored when --limit is set
+    --help            Show additional descriptions for any sub commands.
 
 Examples
     Create a new repository named foo
