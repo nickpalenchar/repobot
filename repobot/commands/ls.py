@@ -36,8 +36,7 @@ class Ls(Base):
     @set_token
     def run(self, basicauth):
 
-        limit = int(self.options['--limit']) or -1
-        print(limit)
+        limit = int(self.options['--limit'] or -1)
         page = 1        
         last_page = self.getlastpage(basicauth=basicauth) if self.options['--limit'] or self.options['--all'] else 1 # only one page by default
         for p in range(1, last_page+1):
