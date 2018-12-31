@@ -11,6 +11,11 @@ from repobot import __version__
 
 
 this_dir = abspath(dirname(__file__))
+
+
+with open('requirements.txt') as f:
+            required = f.read().splitlines()
+
 with open(join(this_dir, 'README.rst'), encoding='utf-8') as file:
     long_description = file.read()
 
@@ -31,6 +36,9 @@ class RunTests(Command):
         errno = call(['py.test', '--cov=skele', '--cov-report=term-missing'])
         raise SystemExit(errno)
 
+print('>>>>')
+print(required) 
+
 setup(
     name = 'repobot',
     version = __version__,
@@ -40,11 +48,11 @@ setup(
     author = 'Nick Palenchar',
     author_email = '',
     license = 'MIT',
-    classifiers = [ 'github'
+    classifiers = [ 'Development Status :: 3 - Alpha',
     ],
     keywords = 'cli',
     packages = find_packages(exclude=['docs', 'tests*']), # prevents irrelevent files from being added to package
-    install_requires = ['docopt'],
+    install_requires = required,
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },

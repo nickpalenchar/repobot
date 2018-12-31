@@ -9,3 +9,9 @@ https://stormpath.com/blog/building-simple-cli-interfaces-in-python (building of
 USEFUL COMMANDS
 
 / python setup.py test # run tests
+
+DEVELOPMENT
+Virtual Env name rbot is used. install via `pip install -e .` in root. Once installed, can edit without reinstalling.
+
+TESTING
+A seperate environment where the module is downloaded directly from the site, i.e. `pip install repobot==0.0.9a`
