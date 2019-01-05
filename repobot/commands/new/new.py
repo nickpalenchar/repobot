@@ -67,5 +67,5 @@ class New(Base):
     @allowescape
     @checkshellcommand('git')
     def cloneprompt(self, cloneurl):
-        if self.options['-C'] or yn_input('Clone into current working directory now? [y/N] ', default=False):
+        if self.options['-C'] or yn_input('Clone into current working directory now?', default=False):
             return os.system(path.dirname(path.abspath(__file__)) + '/git-clone.sh ' + cloneurl)
