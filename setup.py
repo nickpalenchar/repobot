@@ -36,9 +36,6 @@ class RunTests(Command):
         errno = call(['py.test', '--cov=skele', '--cov-report=term-missing'])
         raise SystemExit(errno)
 
-print('>>>>')
-print(required) 
-
 setup(
     name = 'repobot',
     version = __version__,
@@ -52,6 +49,7 @@ setup(
     ],
     keywords = 'cli',
     packages = find_packages(exclude=['docs', 'tests*']), # prevents irrelevent files from being added to package
+    package_data = {'': ['*.sh', '*.bash']},
     install_requires = required,
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
