@@ -1,5 +1,12 @@
 # new.py
-'''create a new repo'''
+'''
+Create a new repository
+
+Usage:
+    rbot new
+    rbot new <repo_name> [-DC] [--private --clone --org=<org_name>]
+    
+'''
 import json
 import sys
 import requests
@@ -9,11 +16,17 @@ from os import path
 from ..base import Base
 from ..utils import set_token, cinput, yn_input, allowescape, checkshellcommand
 
+from docopt import docopt
+
 class New(Base):
 
     @set_token
     def run(self, basicauth):
+        if '--help' in self.options:
+            docopt(__doc__, argv='--help')
+
         name = self.getname()
+
         description = self.getdescription()
         isprivate = self.getprivateoption()
         hasreadme = self.getreadmeoption()
