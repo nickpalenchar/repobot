@@ -22,8 +22,7 @@ class New(Base):
 
     @set_token
     def run(self, basicauth):
-        if '--help' in self.options:
-            docopt(__doc__, argv='--help')
+        self.checkHelp(__doc__)
 
         name = self.getname()
 

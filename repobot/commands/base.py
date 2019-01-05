@@ -1,6 +1,8 @@
 # repobot/commands/base.py
 '''The base command.'''
 
+from docopt import docopt
+
 class Base(object):
     '''A base command.'''
 
@@ -11,3 +13,8 @@ class Base(object):
 
     def run(self):
         raise NotImplementedError('The run() command was not implemented for this subclass')
+
+    def checkHelp(self, doc):
+        if '--help' in self.options:
+            docopt(doc, argv=['--help'])
+
