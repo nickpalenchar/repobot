@@ -31,10 +31,10 @@ from colorama import init, Fore, Style
 import requests
 
 class Ls(Base):
-    '''say hello world'''
 
     @set_token
     def run(self, basicauth):
+        self.checkHelp(__doc__)
 
         limit = int(self.options['--limit'] or -1)
         page = 1        
@@ -46,7 +46,7 @@ class Ls(Base):
                 limit -= 1
                 # check if limit is -1 to make limit inclusive
                 # don't check with less than as -1 starting is limitless (becomes -2 on first check and never breaks)
-                if limit == -1:
+                if limit == 0:
                     return
 
     def getlastpage(self, *, basicauth):
