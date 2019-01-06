@@ -1,5 +1,13 @@
 # repobot/commands/login.py
-'''set login token'''
+'''
+login - configue credentials with system keychain.
+
+Usage:
+    rbot login
+
+Uses the system keychain to store login credentials.
+You may be asked to give Python permission to access the system keychain.
+Select `Always' to prevent further popups.'''
 
 from .base import Base
 
@@ -13,7 +21,8 @@ class Login(Base):
     '''login class'''
 
     def run(self):
-        
+        self.checkHelp(__doc__)
+
         username, password = self.getLoginDetails()
 
         res = requests.get('https://api.github.com/user', auth=requests.auth.HTTPBasicAuth(username, password))
