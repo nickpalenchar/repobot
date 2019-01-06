@@ -7,7 +7,7 @@ Usage:
     rbot ls [--params=<param_str>] [--limit <number>|--all]
     rbot pr [<repo_name>] [<branch]
     rbot hello [<world>] [--name=<yours>]
-    
+
 Options:
     -D                Use all defaluts.
     --clone           Automatically clone the created repo.
@@ -31,13 +31,18 @@ from inspect import getmembers, isclass
 
 from docopt import docopt
 
-#from . import __version__ as VERSION
-VERSION='0.1.0'
+from repobot import __version__ as VERSION
+import sys
 
 def main():
     """Main CLI entrypoint."""
     import repobot.commands as commands
-    options = docopt(__doc__, version=VERSION)
+    if '--help' in sys.argv:
+        sys.argv.remove('--help')
+        options = docopt(__doc__, help=False, version=VERSION)
+        options['--help'] = True
+    else:
+        options = docopt(__doc__, help=False, version=VERSION)
     # Here we'll try to dynamically match the command the user is trying to run
     # with a pre-defined command class we've already created.
     for (k, v) in options.items():
