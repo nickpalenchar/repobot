@@ -5,7 +5,7 @@ Usage:
     rbot login
     rbot new [<repo_name>] [-DC] [--private --clone --org=<org_name>]
     rbot ls [--params=<param_str>] [--limit <number>|--all]
-    rbot pr [<repo_name>] [<branch]
+    rbot pr (create|merge)
     rbot hello [<world>] [--name=<yours>]
 
 Options:
