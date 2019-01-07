@@ -45,7 +45,10 @@ setup(
     author = 'Nick Palenchar',
     author_email = '',
     license = 'MIT',
-    classifiers = [ 'Development Status :: 3 - Alpha',
+    classifiers = [ 
+            'Development Status :: 4 - Beta', 
+            'Intended Audience :: Developers',
+            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     ],
     keywords = 'cli',
     packages = find_packages(exclude=['docs', 'tests*']), # prevents irrelevent files from being added to package

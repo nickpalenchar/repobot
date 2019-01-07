@@ -1,3 +1,3 @@
 # __init__.py
-__version__ = '0.0.14a'
+__version__ = '0.1.1-beta'
 name = 'repobot'
