@@ -17,8 +17,8 @@ import requests
 class Pr(Base):
 
     @set_token
-    def run(self, basicauth):       
-        r = requests.get('https://api.github.com/user', auth=basicauth)
-        print('the re was', r)
-        print('Hello, world!')
+    def run(self, basicauth):
+        #r = requests.get('https://api.github.com/user', auth=basicauth)
+        print('the re was')
+        print('Hello, from pr!')
         print('You suplied the following optons:', dumps(self.options, indent=2, sort_keys=True))
