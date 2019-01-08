@@ -36,6 +36,10 @@ import sys
 def main():
     """Main CLI entrypoint."""
 
+    # First, check if a subcommand was given and automatically reroute if it is.
+    delegateIfSubcommand(subcommands=['pr'])
+
+    # intercept help in case sepecific command is also specified
     if '--help' in sys.argv:
         sys.argv.remove('--help')
         options = docopt(__doc__, help=False, version=VERSION)
@@ -43,8 +47,6 @@ def main():
     else:
         options = docopt(__doc__, help=False, version=VERSION)
 
-    # First, check if a subcommand was given and automatically reroute if it is.
-    delegateIfSubcommand(subcommands=['pr'], options=options)
     # Here we'll try to dynamically match the command the user is trying to run
     # with a pre-defined command class we've already created.
     for (k, v) in options.items():
@@ -55,14 +57,14 @@ def main():
             command = command(options)
             command.run()
 
-def delegateIfSubcommand(subcommands=[], options={}):
+def delegateIfSubcommand(subcommands=[]):
     if sys.argv[1] in subcommands:
         module = getattr(commands, sys.argv[1])
         rcommands = getmembers(module, isclass)
         print(rcommands)
-        subcommand = rcommands[1][1]
-        print('found a subcommand')
-        subcommand = subcommand(options)
+        subcommand = [command[1] for command in rcommands if command[0] != 'SubcommandBase'][0]
+        print(subcommand)
+        subcommand = subcommand(sys.argv)
         subcommand.run()
         sys.exit(0)
 
