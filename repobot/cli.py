@@ -16,7 +16,7 @@ Options:
     --all             For getting lists, inclued all entries. Is ignored when --limit is set
     --help            Show additional descriptions for any sub commands.
 
-Examples
+Examples:
     Create a new repository named foo
         rbot new foo
 
@@ -58,12 +58,12 @@ def main():
             command.run()
 
 def delegateIfSubcommand(subcommands=[]):
+    if len(sys.argv) is 1:
+        return
     if sys.argv[1] in subcommands:
         module = getattr(commands, sys.argv[1])
         rcommands = getmembers(module, isclass)
-        print(rcommands)
         subcommand = [command[1] for command in rcommands if command[0] != 'SubcommandBase'][0]
-        print(subcommand)
         subcommand = subcommand(sys.argv)
         subcommand.run()
         sys.exit(0)

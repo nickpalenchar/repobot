@@ -1,8 +1,4 @@
 # repobot/commands/base.py
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# IF CHANGING. COPY/PASTE TO ALL SUBCOMMAND CLIS AS WELL (Issue #21)
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 '''The base command.'''
 
 from docopt import docopt
