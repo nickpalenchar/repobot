@@ -5,7 +5,26 @@ Create a new repository
 Usage:
     rbot new
     rbot new <repo_name> [-DC] [--private --clone --org=<org_name>]
+
+Description:
+    Create a new repository for the authenticated user or an organization the authenticated
+    user belongs to. In its first form, repobot will prompt the user for nescessary
+    information (name, description, private options, etc). In its second form, repobot will
+    prompt for missing information, if nescessary. Prompts do not inclued creating in an
+    organizaton and must be set with the --org flag instead.
+
+    Upon successful creation, repobot provides the option of cloning the new repository in
+    the directory where repobot was ran.
     
+Options:
+    -D                Use default repository optinos for any missing information. No prompts will
+                      be given. The default options are: no description, public repo, no readme.
+    -C, --clone       Automatically clone the repository after successfully creating.
+
+    --private         Set the visibility option to private.
+
+    --org=<org_name>  When set, repository will be created in the given organization. User must
+                      have appropriate permissions set.
 '''
 import json
 import sys
@@ -37,9 +56,9 @@ class New(Base):
         POST_URL = 'https://api.github.com/orgs/%s/repos' % (self.options['--org']) \
                     if self.options['--org'] \
                     else 'https://api.github.com/user/repos'
-        
+
         res = requests.post(POST_URL, auth=basicauth, json=data)
-        
+
         if res.status_code == 201:
             resdata = res.json()
             print('Successfully created at ' + resdata['clone_url'])
