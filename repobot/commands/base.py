@@ -14,7 +14,6 @@ class Base(object):
         self.options = options
         self.args = args
         self.kwargs = kwargs
-        self.options = {}
 
     def run(self):
         raise NotImplementedError('The run() command was not implemented for this subclass')

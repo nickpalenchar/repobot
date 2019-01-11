@@ -3,7 +3,8 @@
 rbot pr - MANAGE PULL REQUESTS
 
 Usage:
-    rbot pr new [<base_branch> [<compare_branch]]
+    rbot pr new [-i] [--blank]
+    rbot pr new [--blank] [<base_branch> [<compare_branch>]]
     rbot pr merge
     '''
 from inspect import getmembers, isclass
@@ -33,5 +34,9 @@ class Pr(SubcommandBase):
                 module = getattr(commands, k)
                 rcommands = getmembers(module, isclass)
                 command = [command[1] for command in rcommands if command[0] != 'Base'][0]
+                print('>> command')
+                print(options)
+                print(command)
                 command = command(options)
+                print(command.options)
                 command.run()
