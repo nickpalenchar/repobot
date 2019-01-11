@@ -38,7 +38,7 @@ class Login(Base):
     def getLoginDetails(self) -> tuple:
         """Prompts the user for a github login, terminates on KeyboardInterrupt"""
         try:
-            username = input('Guthub username: ')
+            username = input('Github username: ')
             password = getpass.getpass()
         except KeyboardInterrupt:
             print('\nok then -_-')
