@@ -2,7 +2,7 @@
 
 REMOTE=$(git remote show)
 
-if (( $(echo $E | wc -l) > 1)) then;
+if (( $(echo $E | wc -l) > 1)); then
   exit 10
 fi
 

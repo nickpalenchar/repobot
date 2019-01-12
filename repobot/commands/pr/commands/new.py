@@ -35,7 +35,6 @@ class New(Base):
         if self.options['-i']:
             return _interactivemode()
 
-
         base_branch = self._parsebranchformat(self.options['<base_branch>'] or self._getdefaultbranch())
         compare_branch = self._parsebranchformat(self.options['<compare_branch>'] or self._getcurrentbranch())
 
@@ -60,13 +59,19 @@ class New(Base):
     def _getdefaultbranch(self):
         """Gets the default branch from github (usually master)"""
         print('current >>>>' + absdirname(__file__))
-        res = subprocess.check_output(". %s/%s" %(absdirname(__file__), "getdefaultbranch.sh"), shell=True)
+        res = None 
+        try:
+            res = subprocess.check_output(". %s/%s" %(absdirname(__file__), "getdefaultbranch.sh"), shell=True)
+        except subprocess.CalledProcessError as ex:
+            print('oh an error')
+            print(ex.__dict__)
+        print('HIOOOOUEOHUSEOHUNEOHUTNEOHUTNSOH')
         print(res.strip(b'\n'))
         sys.exit()
 
     def _parsecurrentbranch(self):
         """Gets the branch currently on"""
-        return subprocess.check_output("sh %s/%s" % (absdirname(__file__), "/parsecurrentbranch.sh"))
+        return subprocess.check_output("sh %s/%s" % (absdirname(__file__), "parsecurrentbranch.sh"))
 
     def _promptmessage(self):
         pass
