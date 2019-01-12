@@ -35,19 +35,24 @@ class New(Base):
         if self.options['-i']:
             return _interactivemode()
 
-        base_branch = self._parsebranchformat(self.options['<base_branch>'] or self._getdefaultbranch())
-        compare_branch = self._parsebranchformat(self.options['<compare_branch>'] or self._getcurrentbranch())
+        base_branch = self._parsebranchformat(self.options['<base_branch>'] or "", self._getdefaultbranch())
+        compare_branch = self._parsebranchformat(self.options['<compare_branch>'], self._getcurrentbranch())
 
         message = self._promptmessage()
 
-    def _parsebranchformat(self, branch):
+
+    def _parsebranchformat(self, branch, fallback_branch=None):
         """Returns a list as [owner, repo, branch] list. Fills in missing values with defaults"""
-        sections = branch.split('/')
+        sections = branch.split('/') if branch is not None else []
+        print("heousuhoaetnhuntsoea")
+        print(sections)
         if len(sections) > 3:
             print("Syntax error: branch string contains too many slashes (%s)" % branch)
             sys.exit(1)
+        if len(sections) == 0:
+            sections.insert(0, fallback_branch)
         if len(sections) == 1:
-            sections.insert(0, self._parsecurrentbranch())
+            sections.insert(0, self._getcurrentrepo())
         if len(sections) == 2:
             sections.insert(0, keyring.get_password('repobot', 'username'))
         return sections
@@ -56,22 +61,32 @@ class New(Base):
     def _interactivemode(self):
         pass
 
+    def _getcurrentrepo(self) -> str:
+        res = subprocess.check_output(absdirname(__file__) + '/getcurrentrepo.sh')
+        return str(res, 'utf-8').strip('\n')
+
+
     def _getdefaultbranch(self):
         """Gets the default branch from github (usually master)"""
-        print('current >>>>' + absdirname(__file__))
-        res = None 
+        #res = None
         try:
             res = subprocess.check_output(". %s/%s" %(absdirname(__file__), "getdefaultbranch.sh"), shell=True)
         except subprocess.CalledProcessError as ex:
-            print('oh an error')
-            print(ex.__dict__)
-        print('HIOOOOUEOHUSEOHUNEOHUTNEOHUTNSOH')
-        print(res.strip(b'\n'))
-        sys.exit()
+            if ex.returncode == 10:
+                print('ERROR: multiple remotes detected. Repobot only supports repositories with one remote')
+                sys.exit(10)
+            else:
+                print(ex.__dict__)
+                print('ERROR: an unknown error occured :(')
+                sys.exit(ex.returncode)
+        return str(res, 'utf-8').strip('\n')
 
-    def _parsecurrentbranch(self):
+
+    def _getcurrentbranch(self):
         """Gets the branch currently on"""
-        return subprocess.check_output("sh %s/%s" % (absdirname(__file__), "parsecurrentbranch.sh"))
+        res = subprocess.check_output(". %s/%s" % (absdirname(__file__), "getcurrentbranch.sh"), shell=True)
+        return str(res, 'utf-8').strip('\n')
+
 
     def _promptmessage(self):
         pass
