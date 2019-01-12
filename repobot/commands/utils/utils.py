@@ -72,8 +72,11 @@ def checkshellcommand(command, quiet=True):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if os.popen('which %s' % command).read():
-                return func(*args, **kwargs)            
+                return func(*args, **kwargs)
             if not quiet:
                 print('WARN: Shell command %s was needed but not found. Some things may not work' %s)
         return wrapper
     return decorator
+
+def absdirname(__file__):
+    return os.path.dirname(os.path.abspath(__file__))
