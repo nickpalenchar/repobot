@@ -10,20 +10,25 @@ Usage:
     rbot pr new <owner>/<repo>/<base_branch> [<repo>/<compare_branch>]
 
 Options:
-    -i      Run in interactive mode. This will prompt the user to select
-            base and compare branches from a repo the user was currently
-            in when running repobot, unless --repo was specified
+    -A                  Automatically writes 'merge COMPARE into BASE branch' as the PR message
 
-    --repo  Specify a repo for the pull request.
+    -i                  Run in interactive mode. This will prompt the user to select
+                        base and compare branches from a repo the user was currently
+                        in when running repobot, unless --repo was specified
+
+    --message=<text>    Sets the message as a one-liner of <text>. No markdown is supported here.
+
+    --repo              Specify a repo for the pull request.
 
 Description:
     TODO
 """
 
 import sys
+import re
 from repobot.commands.base import Base
 from repobot.commands.utils import set_token
-from repobot.commands.utils import absdirname
+from repobot.commands.utils import absdirname, allowescape, editorprompt
 import subprocess
 import requests
 import keyring
@@ -44,7 +49,7 @@ class New(Base):
     def _parsebranchformat(self, branch, fallback_branch=None):
         """Returns a list as [owner, repo, branch] list. Fills in missing values with defaults"""
         sections = branch.split('/') if branch is not None else []
-        print("heousuhoaetnhuntsoea")
+
         print(sections)
         if len(sections) > 3:
             print("Syntax error: branch string contains too many slashes (%s)" % branch)
@@ -70,7 +75,7 @@ class New(Base):
         """Gets the default branch from github (usually master)"""
         #res = None
         try:
-            res = subprocess.check_output(". %s/%s" %(absdirname(__file__), "getdefaultbranch.sh"), shell=True)
+            res = subprocess.check_output(". %s/%s" % ( absdirname(__file__), "getdefaultbranch.sh" ), shell=True)
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 10:
                 print('ERROR: multiple remotes detected. Repobot only supports repositories with one remote')
@@ -88,8 +93,27 @@ class New(Base):
         return str(res, 'utf-8').strip('\n')
 
 
+    @allowescape
     def _promptmessage(self):
-        pass
+        initial_message="""
+
+%-------%
+Write your commit message above the percent divider; Everything below it will be ignored
+To abort, quit with a blank message (or quit without saving)
+You can set your editor explicitly in your shell with `export EDITOR=vim`, for example.
+        """
+        res = editorprompt(text=initial_message.encode('utf-8'))
+            if res == initial_message:
+                print('PR comment unchanged. Aborting.')
+                sys.exit(2)
+        message = ''
+        for i in res.split('\n'):
+            if i == '%-------%':
+                break
+            message += i + '\n'
+
+
+
 
 
         print('opiton')
