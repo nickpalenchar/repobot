@@ -16,7 +16,9 @@ Options:
                         base and compare branches from a repo the user was currently
                         in when running repobot, unless --repo was specified
 
-    --message=<text>    Sets the message as a one-liner of <text>. No markdown is supported here.
+    --message <text>    Sets the message as a one-liner of <text>. No markdown is supported here.
+
+    --title <text>      Set the title of the pull request
 
     --repo              Specify a repo for the pull request.
 
@@ -40,10 +42,10 @@ class New(Base):
         if self.options['-i']:
             return _interactivemode()
 
-        base_branch = self._parsebranchformat(self.options['<base_branch>'] or "", self._getdefaultbranch())
+        base_branch = self._parsebranchformat(self.options['<base_branch>'], self._getdefaultbranch())
         compare_branch = self._parsebranchformat(self.options['<compare_branch>'], self._getcurrentbranch())
-
         message = self._promptmessage()
+        self.__postpr(base_branch, compare_branch, message)
 
 
     def _parsebranchformat(self, branch, fallback_branch=None):
@@ -103,19 +105,28 @@ To abort, quit with a blank message (or quit without saving)
 You can set your editor explicitly in your shell with `export EDITOR=vim`, for example.
         """
         res = editorprompt(text=initial_message.encode('utf-8'))
-            if res == initial_message:
-                print('PR comment unchanged. Aborting.')
-                sys.exit(2)
         message = ''
         for i in res.split('\n'):
             if i == '%-------%':
                 break
             message += i + '\n'
+        message = message.strip()
 
+        if bool(message) is False:
+            print('PR comment blank or unchanged. Aborting')
+            sys.exit(2)
 
+        return message
 
+    @set_token
+    def __postpr(self, base_branch, compare_branch, message, basicauth):
+        POST_URL = 'https://api.github.com/repos/%s/%s/pulls' % (base_branch[0],
+                                                                 base_branch[1],)
+        data = {'title': self.options.get('title', 'Merge %s:%s into %s:%s' % \
+                         (compare_branch[0], compare_branch[2], base_branch[0], base_branch[2])),
+                'head': compare_branch[2] if compare_branch[0] == base_branch[0] else '%s:%s'%(compare_branch[0],compare_branch[2]),
+                'base': base_branch[2],
+                'body': message}
 
-
-        print('opiton')
-        print(self.options)
-        print('running the pr')
+        res = requests.post(POST_URL, auth=basicauth, json=data)
+        # success is 201

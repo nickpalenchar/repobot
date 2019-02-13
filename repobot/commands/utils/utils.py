@@ -60,7 +60,7 @@ def editorprompt(text=""):
     Opens a text editor for user input (as specified by $EDITOR).
     If there is no $EDITOR specified, look for nano, then vim, then emacs
     """
-    EDITOR = os.environ.get('EDITOR', 'vim')
+    EDITOR = os.environ.get('EDITOR')
     if not EDITOR:
         # TODO look for other editors
         if os.popen('which nano').read():
