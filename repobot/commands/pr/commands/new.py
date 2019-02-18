@@ -25,9 +25,10 @@ Options:
 Description:
     TODO
 """
-
 import sys
 import re
+import json
+from colorama import init, Fore, Style
 from repobot.commands.base import Base
 from repobot.commands.utils import set_token
 from repobot.commands.utils import absdirname, allowescape, editorprompt
@@ -44,7 +45,7 @@ class New(Base):
 
         base_branch = self._parsebranchformat(self.options['<base_branch>'], self._getdefaultbranch())
         compare_branch = self._parsebranchformat(self.options['<compare_branch>'], self._getcurrentbranch())
-        message = self._promptmessage()
+        message = self.options.get('<commitMessage>') or self._promptmessage()
         self.__postpr(base_branch, compare_branch, message)
 
 
@@ -71,7 +72,6 @@ class New(Base):
     def _getcurrentrepo(self) -> str:
         res = subprocess.check_output(absdirname(__file__) + '/getcurrentrepo.sh')
         return str(res, 'utf-8').strip('\n')
-
 
     def _getdefaultbranch(self):
         """Gets the default branch from github (usually master)"""
@@ -122,7 +122,7 @@ You can set your editor explicitly in your shell with `export EDITOR=vim`, for e
     def __postpr(self, base_branch, compare_branch, message, basicauth):
         POST_URL = 'https://api.github.com/repos/%s/%s/pulls' % (base_branch[0],
                                                                  base_branch[1],)
-        data = {'title': self.options.get('title', 'Merge %s:%s into %s:%s' % \
+        data = {'title': self.options.get('<commitTitle>', 'Merge %s:%s into %s:%s' % \
                          (compare_branch[0], compare_branch[2], base_branch[0], base_branch[2])),
                 'head': compare_branch[2] if compare_branch[0] == base_branch[0] else '%s:%s'%(compare_branch[0],compare_branch[2]),
                 'base': base_branch[2],
@@ -130,3 +130,9 @@ You can set your editor explicitly in your shell with `export EDITOR=vim`, for e
 
         res = requests.post(POST_URL, auth=basicauth, json=data)
         # success is 201
+        if res.status_code != 201:
+            print(Fore.RED + 'Pull request not created.' + Style.RESET_ALL)
+            print(json.dumps(res.json(), indent=2))
+        else:
+            print(Fore.GREEN + 'Pull request created.' + Style.RESET_ALL)
+            print('View it at %s' % res.json()['html_url'])

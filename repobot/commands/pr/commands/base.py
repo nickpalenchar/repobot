@@ -4,7 +4,6 @@
 from docopt import docopt
 
 class Base(object):
-    '''A base command.'''
 
     def __init__(self, options, *args, **kwargs):
         self.options = options
