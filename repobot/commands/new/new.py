@@ -15,7 +15,7 @@ Description:
 
     Upon successful creation, repobot provides the option of cloning the new repository in
     the directory where repobot was ran.
-    
+
 Options:
     -D                Use default repository optinos for any missing information. No prompts will
                       be given. The default options are: no description, public repo, no readme.

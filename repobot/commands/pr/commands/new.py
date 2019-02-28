@@ -3,11 +3,34 @@ rbot pr new - CREATE PULL REQUESTS
 
 Usage:
     rbot pr new
-    rbot pr new -i [--repo=<repo>]
-    rbot pr new <base_branch> [<compare_branch>]
-    rbot pr new <repo>/<base_branch> [<compare_branch>]
-    rbot pr new <repo>/<base_branch> [<repo>/<compare_branch>]
-    rbot pr new <owner>/<repo>/<base_branch> [<repo>/<compare_branch>]
+    rbot pr new <compare_branch>
+    rbot pr new <base_branch> <compare_branch>
+    rbot pr new <compare_branch> --into <base_branch>
+    rbot pr new --help
+
+Description:
+    For most cases, repobot gathers information from the git repository the user
+    is currently in. Can be run outside of a git repository, but full information
+    must be provided. See "Specifying Branch Names"
+
+    In the first format, creates a pull request for the branch the user is
+    currently in to be merged into the repository's default branch default branch
+    (usually master)
+
+    In the second format, creates a pull request to merge <compare_branch> into the
+    default branch of the current git repository (usually master)
+
+    In the third format, creates a pull request to merge <compare_branch> into
+    <base_branch>
+
+Specifying Branch Names:
+    Branch names are parsed in owner/repo/branch format, with everything but
+    branch optional. Defaults will take the place
+
+    * featurebranch
+
+
+
 
 Options:
     -A                  Automatically writes 'merge COMPARE into BASE branch' as the PR message
@@ -22,38 +45,41 @@ Options:
 
     --repo              Specify a repo for the pull request.
 
-Description:
-    TODO
 """
 import sys
 import re
 import json
-from colorama import init, Fore, Style
+from colorama import init, Fore, Style, Back
 from repobot.commands.base import Base
-from repobot.commands.utils import set_token
-from repobot.commands.utils import absdirname, allowescape, editorprompt
+from repobot.commands.utils import set_token, absdirname, allowescape, editorprompt, yn_input
 import subprocess
 import requests
 import keyring
 
 class New(Base):
 
+    @allowescape
     @set_token
     def run(self, basicauth):
-        if self.options['-i']:
-            return _interactivemode()
 
         base_branch = self._parsebranchformat(self.options['<base_branch>'], self._getdefaultbranch())
         compare_branch = self._parsebranchformat(self.options['<compare_branch>'], self._getcurrentbranch())
-        message = self.options.get('<commitMessage>') or self._promptmessage()
-        self.__postpr(base_branch, compare_branch, message)
+        message = self.options.get('--message') or self._promptmessage()
+
+        print(Back.WHITE + Fore.BLACK + 'You are submitting the following pull request:' + Style.RESET_ALL)
+        print(Style.BRIGHT + 'FROM: ' + Style.RESET_ALL + '/'.join(compare_branch))
+        print(               '         |')
+        print(               '         V')
+        print(Style.BRIGHT + 'TO:   ' + Style.RESET_ALL + '/'.join(base_branch))
+        print('')
+        if yn_input('Submit? ', default=True):
+            self.__postpr(base_branch, compare_branch, message)
 
 
     def _parsebranchformat(self, branch, fallback_branch=None):
         """Returns a list as [owner, repo, branch] list. Fills in missing values with defaults"""
         sections = branch.split('/') if branch is not None else []
 
-        print(sections)
         if len(sections) > 3:
             print("Syntax error: branch string contains too many slashes (%s)" % branch)
             sys.exit(1)
@@ -83,7 +109,6 @@ class New(Base):
                 print('ERROR: multiple remotes detected. Repobot only supports repositories with one remote')
                 sys.exit(10)
             else:
-                print(ex.__dict__)
                 print('ERROR: an unknown error occured :(')
                 sys.exit(ex.returncode)
         return str(res, 'utf-8').strip('\n')
