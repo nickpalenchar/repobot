@@ -65,9 +65,6 @@ class Merge(New):
         else:
             [owner, user] = ownerRepo.split('/')
 
-
-
-
     def _interactivemode(self):
         pass
 
