@@ -8,6 +8,7 @@ Usage:
     rbot pr (new|merge)
     rbot hello [<world>] [--name=<yours>]
 
+
 Options:
     -D                Use all defaluts.
     --clone           Automatically clone the created repo.

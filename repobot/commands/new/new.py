@@ -1,6 +1,6 @@
 # new.py
 '''
-Create a new repository
+rbot new - CREATE A NEW REPOSITORY
 
 Usage:
     rbot new
@@ -19,6 +19,7 @@ Description:
 Options:
     -D                Use default repository optinos for any missing information. No prompts will
                       be given. The default options are: no description, public repo, no readme.
+
     -C, --clone       Automatically clone the repository after successfully creating.
 
     --private         Set the visibility option to private.
