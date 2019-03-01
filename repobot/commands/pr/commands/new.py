@@ -8,6 +8,14 @@ Usage:
     rbot pr new <compare_branch> --into <base_branch>
     rbot pr new --help
 
+Options:
+    --message <msg>    Set the body of the commit to a specified string, rather than
+                       getting prompted.
+
+    -title <title>     set the title of the commit.
+
+    -y                 Skips confirmation prompt.
+
 Description:
     For most cases, repobot gathers information from the git repository the user
     is currently in. Can be run outside of a git repository, but full information
@@ -24,26 +32,12 @@ Description:
     <base_branch>
 
 Specifying Branch Names:
-    Branch names are parsed in owner/repo/branch format, with everything but
+    Branch names are parsed in owner:repo:branch format, with everything but
     branch optional. Defaults will take the place
 
-    * featurebranch
-
-
-
-
-Options:
-    -A                  Automatically writes 'merge COMPARE into BASE branch' as the PR message
-
-    -i                  Run in interactive mode. This will prompt the user to select
-                        base and compare branches from a repo the user was currently
-                        in when running repobot, unless --repo was specified
-
-    --message <text>    Sets the message as a one-liner of <text>. No markdown is supported here.
-
-    --title <text>      Set the title of the pull request
-
-    --repo              Specify a repo for the pull request.
+    * featurebranch - sets the branch name only.
+    * repo:featurebranch - sets the branch in a specific repository
+    * owner:repo:featurebranch - explicity let an a branch of a user's repository.
 
 """
 import sys
@@ -55,25 +49,26 @@ from repobot.commands.utils import set_token, absdirname, allowescape, editorpro
 import subprocess
 import requests
 import keyring
+from docopt import docopt
 
 class New(Base):
 
     @allowescape
     @set_token
     def run(self, basicauth):
+        if '--help' in self.options:
+            print(__doc__)
+            return
 
         base_branch = self._parsebranchformat(self.options['<base_branch>'], self._getdefaultbranch())
         compare_branch = self._parsebranchformat(self.options['<compare_branch>'], self._getcurrentbranch())
         message = self.options.get('--message') or self._promptmessage()
 
-        print(Back.WHITE + Fore.BLACK + 'You are submitting the following pull request:' + Style.RESET_ALL)
-        print(Style.BRIGHT + 'FROM: ' + Style.RESET_ALL + '/'.join(compare_branch))
-        print(               '         |')
-        print(               '         V')
-        print(Style.BRIGHT + 'TO:   ' + Style.RESET_ALL + '/'.join(base_branch))
-        print('')
-        if yn_input('Submit? ', default=True):
-            self.__postpr(base_branch, compare_branch, message)
+        if not self.options['-y']:
+            if not self._promptconfirmation(base_branch, compare_branch):
+                return
+
+        self.__postpr(base_branch, compare_branch, message)
 
 
     def _parsebranchformat(self, branch, fallback_branch=None):
@@ -143,11 +138,20 @@ You can set your editor explicitly in your shell with `export EDITOR=vim`, for e
 
         return message
 
+    def _promptconfirmation(self, base_branch, compare_branch):
+        print(Back.WHITE + Fore.BLACK + 'You are submitting the following pull request:' + Style.RESET_ALL)
+        print(Style.BRIGHT + 'FROM: ' + Style.RESET_ALL + '/'.join(compare_branch))
+        print(               '         |')
+        print(               '         V')
+        print(Style.BRIGHT + 'TO:   ' + Style.RESET_ALL + '/'.join(base_branch))
+        print('')
+        return yn_input('Submit? ', default=True)
+
     @set_token
     def __postpr(self, base_branch, compare_branch, message, basicauth):
         POST_URL = 'https://api.github.com/repos/%s/%s/pulls' % (base_branch[0],
                                                                  base_branch[1],)
-        data = {'title': self.options.get('<commitTitle>', 'Merge %s:%s into %s:%s' % \
+        data = {'title': self.options.get('--title', 'Merge %s:%s into %s:%s' % \
                          (compare_branch[0], compare_branch[2], base_branch[0], base_branch[2])),
                 'head': compare_branch[2] if compare_branch[0] == base_branch[0] else '%s:%s'%(compare_branch[0],compare_branch[2]),
                 'base': base_branch[2],
