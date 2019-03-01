@@ -1,19 +1,15 @@
 # repobot/commands/base.py
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# IF CHANGING. COPY/PASTE TO ALL SUBCOMMAND CLIS AS WELL (Issue #21)
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 '''The base command.'''
 
 from docopt import docopt
 
 class Base(object):
-    '''A base command.'''
 
     def __init__(self, options, *args, **kwargs):
         self.options = options
         self.args = args
         self.kwargs = kwargs
+        self.options = {}
 
     def run(self):
         raise NotImplementedError('The run() command was not implemented for this subclass')

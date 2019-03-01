@@ -37,7 +37,7 @@ class Ls(Base):
         self.checkHelp(__doc__)
 
         limit = int(self.options['--limit'] or -1)
-        page = 1        
+        page = 1
         last_page = self.getlastpage(basicauth=basicauth) if self.options['--limit'] or self.options['--all'] else 1 # only one page by default
         for p in range(1, last_page+1):
             repo_res = self.getreposatpage(p, basicauth=basicauth)
@@ -54,7 +54,7 @@ class Ls(Base):
         last_page = re.compile(r'page=(\d+)>;\srel="last"').findall(headers['Link'])[0]
         return int(last_page)
 
-    #TODO: @set_token doesnt work here. Figure out why   
+    #TODO: @set_token doesnt work here. Figure out why
     def getreposatpage(self, page, *, basicauth):
         """ """
         params = addpageparam(parseparams(self.options['--params']), page)
@@ -62,8 +62,8 @@ class Ls(Base):
         checkforerrors(res)
         rel = re.compile(r'rel="(\w+)"').findall(res.headers['Link'])[0]
         return {'repos': self.extractreponames(res.json()), 'rel': rel,}
-        
-        
+
+
     def extractreponames(self, data: list):
         def mapreposforprettyprint(obj):
             permissions = obj['permissions']
@@ -71,16 +71,16 @@ class Ls(Base):
                 readonly = read = Fore.YELLOW + 'readonly' + Style.RESET_ALL
             else:
                 readonly = ''
-            
+
             priv = Fore.RED + 'private ' + Style.RESET_ALL if obj['private'] else ' '
-        
+
             LENGTH = 24
-            return obj['full_name'] + (' ' * (24-len(obj['full_name']))) + ' ' + priv + readonly 
+            return obj['full_name'] + (' ' * (24-len(obj['full_name']))) + ' ' + priv + readonly
         return map(mapreposforprettyprint, data)
 
 
 def checkforerrors(res:'Response'):
-    
+
     if res.status_code > 399:
         print(Fore.RED + 'Couldn\'t process request' + Style.RESET_ALL)
         print(json.dumps(res.json(), indent=2))
@@ -90,10 +90,10 @@ def checkforerrors(res:'Response'):
 def parseparams(params):
     """Parses space seperated params for query string (including the starting `?`)
     Returns empty string if no params are given"""
-    
+
     if params is None:
         return ''
-    
+
     return '?' + re.sub(r'\s+', '&', params)
 
 def addpageparam(params, page):

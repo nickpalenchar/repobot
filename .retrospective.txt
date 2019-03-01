@@ -1,0 +1,7 @@
+Remember to find when you should use classes
+
+example in pr/commands/new.py, returning an arbitrary list.
+
+All other accessing time is just foo[0], not the best.
+
+A class with those proper attributes is much more readable.
